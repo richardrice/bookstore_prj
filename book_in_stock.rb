@@ -3,15 +3,13 @@ class BookInStock
     attr_accessor :price, :title, :author, :genre, :quantity
     attr_reader :isbn
     
-    def initialize(isbn, title, author, genre, price, quantity, add, delete)
+    def initialize(isbn, title, author, genre, price, quantity)
         @isbn  = isbn
         @title = title
         @price = Float(price)
         @author = author
         @genre = genre
         @quantity = quantity
-        @add = add
-        @delete = delete
     end
     
     def to_s
@@ -19,13 +17,11 @@ class BookInStock
     end
     
     def to_cache
-        "#{@isbn},#{@title},#{@author},#{@genre},#{@price},#{@quantity}#{@add},#{@delete}"
+        "#{@isbn},#{@title},#{@author},#{@genre},#{@price},#{@quantity}"
     end
     
     def self.from_cache serialized
     fields = serialized.split(',')
-    {:isbn => fields[0],  :title => fields[1] ,
-    :author => fields[1]:genre => fields[5]}
     BookInStock.new fields[0], fields[1], fields[2],
     fields[3], fields[4], fields[5]
 end

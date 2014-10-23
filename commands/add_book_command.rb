@@ -2,40 +2,43 @@ require_relative 'user_command'
 
 class AddBookCommand < UserCommand
     
-    def initialize (data_source)
+    
+    def initialize(data_source)
         super (data_source)
-        @isbn = ''
+        @title  = ''
+        @author = ''
+        @isbn   = ''
+        @genre = ''
+        @price = 0
+        @quantity = 0
     end
     
     def title
-        'Add Book.'
+        'Add a book'
     end
     
     def input
-        puts 'Add Book.'
+        puts 'Add a book.'
+        print 'Book title?'
+        @title = STDIN.gets.chomp
+        print "Author name? "
+        @author = STDIN.gets.chomp
         print "ISBN? "
         @isbn = STDIN.gets.chomp
+        print 'Genre?'
+        $GENRE.each_index {|i| print " (#{i+1}) #{$GENRE[i]} "}
+        response = STDIN.gets.chomp.to_i
+        @genre = $GENRE[response - 1] if (1..$GENRE.length).member? response
+        print 'Price?'
+        @price = STDIN.gets.chomp
+        print 'Quantity?'
+        @quantity = STDIN.gets.chomp
     end
     
     def execute
-        book = @data_source.findISBN @isbn
-        if book
-            puts '[Hit <return> key to skip to next field]'
-            print "Author (#{book.author}) ?"
-            response = STDIN.gets.chomp
-            book.author = response if response.length > 0
-            print "Title (#{book.title}) ?"
-            response = STDIN.gets.chomp
-            book.title = response if response.length > 0
-            puts "Genre (#{book.genre})."
-            $GENRE.each_index {|i| print " (#{i+1}) #{$GENRE[i]} "}
-            print ' ? '
-            response = STDIN.gets.chomp.to_i
-            book.genre = $GENRE[response - 1] if (1..$GENRE.length).member? response
-            @data_source.addBook book
-            else
-            puts 'Invalid ISBN'
-        end
-    end 
+        book = BookInStock.new(@isbn,@title,@author,@genre,@price,@quantity)
+        @data_source.addBook book
+        
+    end
     
 end
